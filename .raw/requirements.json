@@ -2,7 +2,7 @@
     "template": "Salesforce Case Management API",
     "credentials": [
         {
-            "type": "Salesforce",
+            "type": "SALESFORCE",
             "name": "salesforce"
         }
     ]
