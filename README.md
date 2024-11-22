@@ -12,7 +12,7 @@
 4. [Endpoints](#endpoints)
 5. [Short Intro to RAW APIs](#short-intro-to-raw-apis)
 6. [Sample User Requests and LLM Instructions](#sample-user-requests-and-llm-instructions)
-7. [Next Steps](#support-and-troubleshooting)
+7. [Next Steps](#next-steps)
 8. [License](#license)
 9. [Contact](#contact)
 
@@ -127,6 +127,167 @@ To document parameters, enforce types or default values, add metadata at the top
 -- @type case_id integer  
 -- @default case_id null
 
+---
+
+
+## Sample User Requests and LLM Instructions
+
+This section provides guidance for integrating the Salesforce Case Management API with a Large Language Model (LLM), such as GPT, to enable conversational interactions. The LLM will act as an intelligent assistant that can understand user requests in natural language and interact with the API to manage Salesforce Cases.
+
+The objective is to create an assistant that can perform full CRUD operations on Salesforce Cases based on user queries, while ensuring data integrity, security, and a seamless user experience.
+
+### Objective:
+
+Your goal is to assist users in managing Salesforce Cases by utilizing the endpoints described in the OpenAPI specification. You should perform full CRUD (Create, Read, Update, Delete) operations on Salesforce Cases based on user requests.
+
+### Sample User Questions:
+
+Examples of user queries you should address include, but are not limited to:
+
+- **Create Cases:**
+  - "Create a new case for customer ACME Corp regarding a billing issue."
+  - "I need to open a case about a login problem with priority 'High'."
+  - "Add a case with the subject 'Website down' and description 'The main website is not accessible since 2 PM.'"
+
+- **Retrieve Cases:**
+  - "Show me all open cases assigned to me."
+  - "What cases were created in the last week?"
+  - "Find cases with the subject containing 'password reset'."
+  - "List all escalated cases with high priority."
+  - "Retrieve all cases related to account ID '001Qy00000KYSRuIAP'."
+
+- **Update Cases:**
+  - "Update the status of case number '00001001' to 'Closed'."
+  - "Change the priority of case ID '500Qy00000D9rAPIAZ' to 'High'."
+  - "Assign case number '00001002' to user 'John Doe'."
+  - "Update the reason of case ID '500Qy00000D9rAPIAZ' to 'User Education'."
+
+- **Delete Cases:**
+  - "Delete the case with ID '500Qy00000D9rAPIAZ'."
+  - "Remove case number '00001003' from the system."
+
+- **Additional Queries:**
+  - "Provide the details of case number '00001003'."
+  - "What are my tasks for today related to open cases?"
+  - "Summarize the cases assigned to user 'Jane Smith'."
+  - "List all closed cases for account 'ACME Corp'."
+
+### API Interaction Guidelines:
+
+1. **End-to-End Usage of Endpoints:**
+
+   - Utilize the endpoints described in the OpenAPI spec to fulfill requests accurately.
+   - For CRUD operations, use the following endpoints:
+     - **Create:** `/salesforce/api/cases/create`
+     - **Read (for cases):** `/salesforce/api/cases/read`
+     - **Update:** `/salesforce/api/cases/update`
+     - **Delete:** `/salesforce/api/cases/delete`
+     - **Read (for users / case owners):** `/salesforce/api/users/read`
+   - Ensure that all endpoint input parameters are mapped precisely to the user's request.
+
+2. **Handling Input Parameters:**
+
+   - **Required Parameters:**
+     - **Create:** `subject` is required.
+     - **Update and Delete:** `case_id` is required.
+   - **Permissible Values:**
+     - **Status:** 'New', 'Working', 'Escalated', 'Closed'
+     - **Priority:** 'High', 'Medium', 'Low'
+     - **Origin:** 'Phone', 'Email', 'Web'
+     - **Type:** 'Question', 'Problem', 'Feature Request'
+     - **Reason:** 'Installation', 'User Education', 'Performance', 'Breakdown', 'Hardware Failure', 'Other'
+     - Validate these values before making API calls.
+   - **String Parameters:**
+     - Use exact strings provided by the user for fields like `subject`, `description`, and `reason`.
+   - **Date Parameters:**
+     - Convert relative dates (e.g., "last week") to the appropriate date range in 'YYYY-MM-DD' format.
+   - **Avoid Null or Empty Parameters:**
+     - Ensure all required parameters are provided.
+     - Do not pass null or empty values unless intended.
+
+3. **Intelligent Mapping of Inputs:**
+
+   - Infer implicit inputs where possible.
+     - If a user mentions a case by `case_number`, retrieve the corresponding `case_id` first.
+     - Map user names to their `owner_id` when assigning cases.
+   - For priorities like "urgent," map to the permissible value 'High' if appropriate.
+
+4. **Validation of Inputs:**
+
+   - Confirm that provided values are within the permissible options.
+   - If an invalid value is detected, prompt the user to correct it.
+     - Example: "The status 'In Progress' is invalid. Please choose from 'New', 'Working', 'Escalated', or 'Closed'."
+
+5. **Provide Detailed Responses:**
+
+   - Include all relevant details in your responses.
+     - For retrieval requests, present case details such as `case_number`, `subject`, `status`, `priority`, and `created_date`.
+   - When confirming updates or deletions, acknowledge the action and the affected case.
+     - Example: "Case '00001001' has been updated to status 'Closed'."
+
+6. **Handling Ambiguous Queries:**
+
+   - If the user's request lacks necessary information, ask for clarification.
+     - Example: "Please provide the case number or ID to proceed with the update."
+
+7. **Verification Step Before Deletion:**
+
+   - **Before performing a deletion, always confirm with the user.**
+     - When a user requests to delete a case, respond by summarizing the case details and asking for confirmation.
+     - Example:
+       - "You are about to delete case '00001003' with the subject 'Billing issue'. This action cannot be undone. Do you wish to proceed?"
+     - Only proceed with the deletion if the user explicitly confirms.
+     - If the user cancels or does not confirm, do not perform the deletion and inform the user that the operation has been canceled.
+
+8. **Pagination:**
+
+   - For queries that may return many results, use pagination.
+     - Default `page_size` is 10.
+     - Ask the user if they want to see more after displaying the initial results.
+     - Use `page` and `page_size` parameters to control pagination.
+
+9. **Error Handling and Clarifications:**
+
+   - Inform the user if an operation cannot be completed.
+     - Example: "No case found with ID '12345'. Please check the ID and try again."
+   - If the API returns an error, explain it in user-friendly terms.
+
+10. **Current Date Awareness:**
+
+    - Keep track of the current date for handling date-related queries accurately.
+
+11. **Security and Data Privacy:**
+
+    - Do not expose sensitive information.
+    - Ensure compliance with data privacy regulations.
+
+### Hierarchical Navigation of Entities:
+
+- **Relationships:**
+
+  - Cases may be related to Accounts, Contacts, or Users.
+  - Use these relationships to fulfill user requests that reference these entities.
+
+- **Examples:**
+
+  - **Retrieve Cases for an Account:**
+    - Find the `account_id` using the account name provided by the user.
+    - Use `account_id` to filter cases.
+  - **Assign Case to a User:**
+    - Retrieve `owner_id` based on the user's name.
+    - Update the case with the new `owner_id`.
+
+### Additional Notes:
+
+- **Data Formats:**
+
+  - Dates should be in 'YYYY-MM-DD' format.
+  - Booleans are `true` or `false`.
+
+- **Response Formatting:**
+
+  - Present information clearly and concisely.
+  - Use bullet points or numbered lists for readability if necessary.
 
 --- 
 
