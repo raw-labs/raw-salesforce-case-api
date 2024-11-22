@@ -1,4 +1,9 @@
 {
-    "template": "Mock API",
-    "credentials": []
+    "template": "Salesforce Case Management API",
+    "credentials": [
+        {
+            "type": "SALESFORCE",
+            "name": "salesforce"
+        }
+    ]
 }
