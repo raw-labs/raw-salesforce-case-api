@@ -37,6 +37,8 @@ The RAW platform allows you to create APIs by writing SQL queries that interact 
 - **Integration with Chatbots**: Designed to be consumed by chatbots or other applications.
 - **Validation and Error Handling**: Incorporates validation for permissible values to maintain data integrity.
 - **Pagination**: Supports pagination in the retrieval endpoint to manage large datasets.
+- **Secure Access**: Endpoints are secured and require API keys with appropriate scopes to access.
+
 
 ---
 
@@ -47,11 +49,14 @@ The RAW platform allows you to create APIs by writing SQL queries that interact 
    - Click the **"Get Started"** button to deploy the template.
    - If you don’t have a RAW account, you’ll be prompted to create one for free. Deployment and account setup are seamless—just one click away!
 
-2. **Explore the API:**
-   - Access your API immediately inside the RAW application.
-   - View endpoint details and invoke them directly to see how they function.
+2. **Create an API Key:**
+    - Since the endpoints are private and expose sensitive Salesforce data, you need to create an API key with the appropriate scope to access them. See Authentication and Security for detailed instructions.
 
-3. **Customize as Needed:**
+3. **Explore the API:**
+   - Access your API immediately inside the RAW application.
+   - View endpoint details and invoke them directly to see how they function, using your API key for authentication.
+
+4. **Customize as Needed:**
    - Modify the API to suit your requirements.
    - Once you’re satisfied, re-publish the changes to make your API available instantly.
 
@@ -110,6 +115,74 @@ The following endpoints are available:
    - **Query Parameters**: Various parameters to filter cases (e.g., `username`, `user_email`, `user_is_active`, `user_department`, `user_id`, `page`, `page_size`).
    - Source code at [/salesforce/api/users/read.sql](./salesforce/api/users/read.sql) and endpoint definition at [/salesforce/api/users/read.yml](./salesforce/api/users/read.yml).
 
+   
+
+---
+
+## Authentication and Security
+
+To ensure the security of sensitive Salesforce data, all endpoints in this API are **private**. Accessing these endpoints requires an API key with the appropriate scope.
+
+### Creating an API Key
+
+1. **Navigate to API Keys in RAW:**
+
+   - Log in to your RAW account.
+   - Go to the **API Keys** section from your dashboard.
+
+2. **Create a New API Key:**
+
+   - Click on **"Create API Key"**.
+   - Provide a name for your API key (e.g., `Salesforce Case Assistant Key`).
+
+3. **Assign the Required Scope:**
+
+   - Assign the scope `case_assistant:admin` to the API key.
+     - This scope corresponds to the `security/scopes` defined in the endpoint YAML files.
+   - Ensure that the scope matches exactly to grant access to all endpoints in this API.
+
+4. **Save and Copy Your API Key:**
+
+
+### Using the API Key
+
+#### In API Calls (e.g., cURL, Postman)
+
+- Include the API key in the `Authorization` header of your HTTP requests.
+- **Example using cURL:**
+
+  ```bash
+  curl -H "Authorization: x-raw-api-key YOUR_API_KEY_HERE" "https://your-raw-account-hostname/salesforce/api/cases/read?status=Open"
+  ```
+
+- **Example using Postman:**
+
+  - In the **Headers** section, add:
+    - **Key:** `Authorization`
+    - **Value:** `x-raw-api-key YOUR_API_KEY_HERE`
+
+#### With the GPT Chatbot
+
+- Configure the GPT chatbot to include the API key in its requests to the endpoints.
+- Ensure that the chatbot's backend securely stores and uses the API key when making API calls.
+
+### Securing Your API Key
+
+- **Keep It Secret:** Do not expose your API key in client-side code, public repositories, or logs.
+- **Rotate Regularly:** Rotate your API keys periodically as a security best practice.
+- **Access Control:** Limit the scopes and permissions of your API keys to only what is necessary.
+
+### Additional Resources
+
+- **Securing Endpoints Documentation:**
+
+  - Learn more about securing your endpoints in RAW: [Securing Endpoints](https://docs.raw-labs.com/docs/building-api-in-raw/securing-endpoints)
+
+- **API Keys Documentation:**
+
+  - Detailed guide on creating and managing API keys: [API Keys](https://docs.raw-labs.com/docs/api-keys)
+
+---
    
 ## Short Intro to RAW APIs
 In RAW, APIs consist of two parts: a YAML file for endpoint configuration and a SQL file for the query logic. The YAML file path defines the API’s endpoint. For example, /salesforce/api/cases/read.yml corresponds to the API path /salesforce/api/cases/read.
@@ -295,6 +368,8 @@ Examples of user queries you should address include, but are not limited to:
 Visit the [Salesforce Case Management Starter page](https://www.raw-labs.com/templates/salesforce-case-management-starter), deploy this template and get started using RAW.
 
 When you create your RAW account, you will be able to view and run these endpoints in the RAW catalog, as well as quickly modify these endpoints or create new ones in the RAW workspace, in our easy-to-use web IDE.
+
+**Remember:** Before invoking the endpoints, create an API key with the required scope (`case_assistant:admin`) and include it in your API calls as described in the Authentication and Security section.
 
 ---
 
