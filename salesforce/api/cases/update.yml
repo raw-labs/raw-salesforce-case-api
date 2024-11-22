@@ -1,0 +1,19 @@
+raw: "0.10"
+endpoint: GET
+metadata:
+  title: Update Case Information.
+  description: Updates a case in Salesforce with new information for subject, description, status, priority, origin, owner ID, type, reason, is_closed, and is_escalated. Returns the updated case information.
+  tags:
+    - salesforce
+    - case
+    - case_assistant
+    - update
+code: sql
+codeFile: update.sql
+format: json
+security:
+  public: false
+  scopes:
+    - case_assistant:admin
+computeClass: normal
+enabled: true

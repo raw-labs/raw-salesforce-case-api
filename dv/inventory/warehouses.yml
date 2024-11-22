@@ -1,0 +1,15 @@
+raw: "0.10"
+endpoint: GET
+metadata:
+  title: Get Warehouse Details.
+  description: Retrieve generic information about warehouses from the Inventory Management System, based on the provided warehouse ID. If no ID is provided, returns information for all warehouses.
+  tags:
+    - data_virtualization
+    - warehouses
+code: sql
+codeFile: warehouses.sql
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

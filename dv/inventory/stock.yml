@@ -1,0 +1,15 @@
+raw: "0.10"
+endpoint: GET
+metadata:
+  title: Get stock levels by warehouse and product.
+  description: Returns the stock levels of products in each warehouse. Parameters: warehouse_id (default: null), product_id (default: null).
+  tags:
+    - data_virtualization
+    - stock
+code: sql
+codeFile: stock.sql
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

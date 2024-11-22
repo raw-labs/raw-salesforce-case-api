@@ -1,0 +1,19 @@
+raw: "0.10"
+endpoint: GET
+metadata:
+  title: Get Salesforce Cases.
+  description: Retrieves cases from a Salesforce database based on various filter parameters.
+  tags:
+    - salesforce
+    - case
+    - case_assistant
+    - read
+code: sql
+codeFile: read.sql
+format: json
+security:
+  public: false
+  scopes:
+    - case_assistant:admin
+computeClass: normal
+enabled: true

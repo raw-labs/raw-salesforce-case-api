@@ -1,0 +1,19 @@
+raw: "0.10"
+endpoint: GET
+metadata:
+  title: Create a new Salesforce case.
+  description: Creates a new case in the Salesforce system with the provided parameters and returns the case information.
+  tags:
+    - salesforce
+    - case
+    - case_assistant
+    - create
+code: sql
+codeFile: create.sql
+format: json
+security:
+  public: false
+  scopes:
+    - case_assistant:admin
+computeClass: normal
+enabled: true

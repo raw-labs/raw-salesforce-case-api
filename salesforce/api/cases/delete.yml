@@ -1,0 +1,19 @@
+raw: "0.10"
+endpoint: GET
+metadata:
+  title: Delete Case and Return Details.
+  description: Deletes a case from the Salesforce database and returns confirmation with case details.
+  tags:
+    - salesforce
+    - case
+    - case_assistant
+    - delete
+code: sql
+codeFile: delete.sql
+format: json
+security:
+  public: false
+  scopes:
+    - case_assistant:admin
+computeClass: normal
+enabled: true
