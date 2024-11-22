@@ -107,12 +107,12 @@ The following endpoints are available:
 5. **GET `/salesforce/api/users/read`**
 
    - **Description**: Returns Salesforce users based on various filters such as username, email, active status, and date ranges. Pagination is supported. All Salesforce entities are created by (created_by_id) and owned by (owner_id) a Salesforce User.
-   - **Query Parameters**: Various parameters to filter cases (e.g., `username`, `user_email`, ``, `subject`, `page`, `page_size`).
+   - **Query Parameters**: Various parameters to filter cases (e.g., `username`, `user_email`, `user_is_active`, `user_department`, `user_id`, `page`, `page_size`).
    - Source code at [/salesforce/api/users/read.sql](./salesforce/api/users/read.sql) and endpoint definition at [/salesforce/api/users/read.yml](./salesforce/api/users/read.yml).
 
    
 ## Short Intro to RAW APIs
-In RAW, APIs consist of two parts: a YAML file for endpoint configuration and a SQL file for the query logic. The YAML file path defines the API’s endpoint. For example, /salesforce/api/cases/read.yaml corresponds to the API path /salesforce/api/cases/read.
+In RAW, APIs consist of two parts: a YAML file for endpoint configuration and a SQL file for the query logic. The YAML file path defines the API’s endpoint. For example, /salesforce/api/cases/read.yml corresponds to the API path /salesforce/api/cases/read.
 
 SQL queries can include dynamic parameters using the :<variable_name> syntax. For instance:
 
@@ -128,7 +128,6 @@ To document parameters, enforce types or default values, add metadata at the top
 -- @default case_id null
 
 ---
-
 
 ## Sample User Requests and LLM Instructions
 
@@ -293,7 +292,7 @@ Examples of user queries you should address include, but are not limited to:
 
 ## Next Steps
 
-Visit the [Salesforce Case Starter page](https://www.raw-labs.com/templates/salesforce-case-api-starter), deploy this template and get started using RAW.
+Visit the [Salesforce Case Management Starter page](https://www.raw-labs.com/templates/salesforce-case-management-starter), deploy this template and get started using RAW.
 
 When you create your RAW account, you will be able to view and run these endpoints in the RAW catalog, as well as quickly modify these endpoints or create new ones in the RAW workspace, in our easy-to-use web IDE.
 
