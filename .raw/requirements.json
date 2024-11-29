@@ -1,5 +1,5 @@
 {
-    "template": "Salesforce Case Management API",
+    "template": "Salesforce Case Management",
     "credentials": [
         {
             "type": "SALESFORCE",
